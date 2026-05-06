@@ -1,73 +1,178 @@
-# Aplicación Tabla Criptomonedas
+# CryptoPulse Dashboard v2.0
 
-[English](#cryptocurrency-table-application)
+CryptoPulse es una evolución profesional del proyecto original **Aplicación Tabla Criptomonedas**. La versión 2.0 transforma una tabla de criptomonedas en un dashboard moderno de análisis de mercado, con métricas globales, tendencias, filtros avanzados, favoritos persistentes y una vista detalle por activo con gráfico histórico.
 
-## Descripción
+## Objetivo de la v2.0
 
-Esta aplicación consume datos de una API para mostrar información relevante sobre criptomonedas en una tabla interactiva. La tabla permite al usuario ordenar la información por cualquier cabecera, ofreciendo una experiencia de usuario dinámica y personalizada.
+La idea principal de esta versión es que el proyecto deje de sentirse como un ejercicio simple de consumo de API y se presente como una aplicación real de producto financiero.
 
-## Tecnologias usadas
+Esta versión está pensada para portafolio y reclutadores: muestra consumo de API externa, visualización de datos, manejo de estado, diseño responsive, persistencia local, experiencia de usuario y estructura preparada para crecer hacia autenticación, portafolio simulado y alertas.
 
-<code><img height="40" alt="React" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/2300px-React-icon.svg.png"></code>
-<code><img height="30" alt="Tailwind" src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg"></code>
+## Features incluidas
 
-## Características Principales
+- Dashboard principal con identidad visual CryptoPulse.
+- Cards de resumen de mercado global.
+- Capitalización total, volumen 24h, dominancia BTC y criptos activas.
+- Top gainer y top loser calculados desde el mercado actual.
+- Tabla Top 100 con ordenamiento por ranking, precio, variaciones, market cap y volumen.
+- Filtros por todas, ganadoras, perdedoras y favoritas.
+- Búsqueda por nombre, símbolo o id.
+- Favoritos persistentes con `localStorage`.
+- Mini gráficos tipo sparkline por criptomoneda.
+- Sección de criptomonedas en tendencia.
+- Vista detalle al hacer click en una criptomoneda.
+- Gráfico histórico por rango: 24h, 7d, 30d, 90d y 1y.
+- Métricas clave por activo: market cap, volumen, supply, ATH y ATL.
+- Descripción y links oficiales del proyecto cuando la API los entrega.
+- Selector de moneda: USD, EUR y CLP.
+- Selector de idioma: español e inglés.
+- Modo claro / oscuro.
+- Responsive design.
+- Roadmap visible para explicar evolución del producto.
 
-- **Tabla Interactiva de Criptomonedas**: Muestra datos en tiempo real sobre distintas criptomonedas, permitiendo al usuario ordenar la información según sus preferencias.
-- **Botón de Regreso al Inicio**: Permite a los usuarios volver rápidamente al principio de la página, mejorando la navegación, especialmente cuando se manejan grandes cantidades de datos.
-- **Alternancia de Tema Oscuro/Claro**: La aplicación ofrece un interruptor que permite cambiar entre un tema oscuro y uno claro, adaptándose a las preferencias visuales del usuario.
-- **Sistema Multilenguaje**: La aplicación es compatible con múltiples idiomas, permitiendo que usuarios de diferentes regiones y lenguas accedan y utilicen la herramienta con facilidad.
+## Stack
 
-## Uso
+- React
+- Vite
+- Recharts
+- Lucide React
+- CSS moderno con variables y diseño responsive
+- CoinGecko API
 
-1. Navega a la aplicación.
-2. Explora la tabla para ver la información más reciente sobre tus criptomonedas favoritas.
-3. Utiliza las cabeceras de la tabla para ordenar la información según tus preferencias.
-4. Activa el tema oscuro o claro según tus preferencias utilizando el interruptor de tema.
-5. Cambia el idioma de la aplicación mediante el selector de idioma en la esquina superior derecha.
+## Instalación
 
-## Contribuciones
+```bash
+npm install
+npm run dev
+```
 
-Las contribuciones son bienvenidas. Por favor, abre un 'issue' o 'pull request' para sugerencias o mejoras.
+Luego abre:
 
-## Licencia
+```bash
+http://localhost:5173
+```
 
-[MIT](LICENSE)
+## Build de producción
 
----
+```bash
+npm run build
+npm run preview
+```
 
-# Cryptocurrency Table Application
+## Estructura del proyecto
 
-[Español](#aplicación-tabla-criptomonedas)
+```txt
+src/
+  api/
+    coingecko.js
+  components/
+    CoinDetailDrawer.jsx
+    CryptoTable.jsx
+    ErrorState.jsx
+    FiltersBar.jsx
+    Header.jsx
+    LoadingState.jsx
+    MarketOverview.jsx
+    MetricCard.jsx
+    RoadmapCards.jsx
+    Sparkline.jsx
+    TrendingCoins.jsx
+  hooks/
+    useCoinDetails.js
+    useCryptoMarket.js
+    useLocalStorage.js
+  utils/
+    formatters.js
+    i18n.js
+  App.jsx
+  main.jsx
+  styles.css
+```
 
-## Description
+## API usada
 
-This application consumes data from an API to display relevant information about cryptocurrencies in an interactive table. The table allows users to sort information by any header, offering a dynamic and personalized user experience.
+Esta versión utiliza endpoints públicos de CoinGecko:
 
-## Technologies Used
+- `/coins/markets`
+- `/global`
+- `/search/trending`
+- `/coins/{id}`
+- `/coins/{id}/market_chart`
 
-<code><img height="40" alt="React" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/2300px-React-icon.svg.png"></code>
-<code><img height="30" alt="Tailwind" src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg"></code>
+> Nota: la API pública de CoinGecko puede aplicar rate limits. La app incluye estados de error para manejar este caso.
 
-## Main Features
+## Roadmap sugerido después de v2.0
 
-- **Interactive Cryptocurrency Table**: Displays real-time data on various cryptocurrencies, allowing users to sort information according to their preferences.
-- **Back to Top Button**: Allows users to quickly return to the top of the page, improving navigation, especially when handling large amounts of data.
-- **Dark/Light Theme Toggle**: The application offers a switch to toggle between a dark and light theme, adapting to the user's visual preferences.
-- **Multilanguage Support**: The application is compatible with multiple languages, allowing users from different regions and languages to access and use the tool easily.
+### v2.1 — Página detalle con routing
 
-## Usage
+- Agregar React Router o migrar a Next.js.
+- Crear rutas reales como `/crypto/bitcoin`.
+- Permitir compartir links directos a cada activo.
 
-1. Navigate to the application.
-2. Explore the table to see the latest information on your favorite cryptocurrencies.
-3. Use the table headers to sort the information according to your preferences.
-4. Toggle the dark or light theme according to your preferences using the theme switch.
-5. Change the application language using the language selector in the top-right corner.
+### v2.2 — TypeScript
 
-## Contributions
+- Migrar componentes, hooks y servicios a TypeScript.
+- Tipar respuestas de CoinGecko.
+- Tipar entidades como `CryptoMarket`, `CoinDetail`, `WatchlistItem` y `PortfolioTransaction`.
 
-Contributions are welcome. Please open an 'issue' or 'pull request' for suggestions or improvements.
+### v2.3 — UX avanzada
 
-## License
+- Skeleton loaders.
+- Toast notifications.
+- Mejor manejo de errores.
+- Paginación o infinite scroll.
+- Tests de componentes principales.
 
-[MIT](LICENSE)
+### v2.5 — Auth + usuarios
+
+- Agregar login/register.
+- Opción rápida: Supabase Auth.
+- Opción orientada a AWS: Cognito + API Gateway + Lambda + DynamoDB.
+
+### v2.6 — Watchlist persistente en cloud
+
+- Guardar favoritos por usuario.
+- Crear múltiples listas.
+- Agregar notas por criptomoneda.
+
+### v2.7 — Portfolio Simulator
+
+- Registrar compras ficticias.
+- Calcular ganancia/pérdida.
+- Mostrar distribución del portafolio.
+- Agregar historial de transacciones.
+
+### v2.8 — Alertas de precio
+
+- Crear alertas por precio mayor/menor que X.
+- Crear alertas por variación porcentual.
+- Guardar alertas por usuario.
+
+### v2.9 — Backend AWS
+
+- Cognito para auth.
+- API Gateway para endpoints propios.
+- Lambda para lógica backend.
+- DynamoDB para usuarios, watchlists, portafolios y alertas.
+- EventBridge para revisar alertas programadas.
+
+### v3.0 — Proyecto listo para reclutadores
+
+- Demo online.
+- Screenshots en README.
+- Diagrama de arquitectura.
+- Tests.
+- CI/CD con GitHub Actions.
+- Deploy S3 + CloudFront o Next.js en infraestructura AWS.
+
+## Cómo presentarlo en el portafolio
+
+**Nombre:** CryptoPulse Dashboard  
+**Descripción corta:** Dashboard moderno para analizar el mercado cripto, visualizar gráficos históricos, guardar favoritos y preparar funcionalidades de portafolio y alertas.  
+**Problema:** una tabla simple no permite entender rápidamente el estado del mercado ni analizar activos individuales.  
+**Solución:** una experiencia visual e interactiva con resumen de mercado, filtros, gráficos y detalle por criptomoneda.  
+**Rol:** desarrollo frontend, integración API, diseño UI/UX, arquitectura base y roadmap de producto.
+
+## Diferencia frente a la versión anterior
+
+La versión anterior era principalmente una tabla interactiva. La v2.0 convierte el proyecto en una experiencia tipo dashboard con una propuesta de producto más clara, mejor presentación visual y una base más sólida para seguir creciendo hacia una app full stack.
