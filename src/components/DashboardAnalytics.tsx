@@ -30,6 +30,7 @@ import {
 } from '../utils/analytics';
 import { formatCurrency, formatNumber, formatPercent, getChangeTone } from '../utils/formatters';
 import { t } from '../utils/i18n';
+import { chartAxis, chartColors, chartTooltipStyle } from '../utils/chartTheme';
 
 function AnalyticsCard({ icon, eyebrow, title, children, className = '' }) {
   return (
@@ -129,19 +130,19 @@ export function DashboardAnalytics({ locale, currency, globalData, coins, onSele
           <SentimentMeter sentiment={sentiment} locale={locale} />
           <div className="market-pulse-chart">
             {marketPulseData.length ? (
-              <ResponsiveContainer width="100%" height={180}>
+              <ResponsiveContainer width="100%" height="100%" minHeight={180}>
                 <AreaChart data={marketPulseData}>
                   <defs>
                     <linearGradient id="pulseGradient" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="5%" stopColor="currentColor" stopOpacity={0.32} />
-                      <stop offset="95%" stopColor="currentColor" stopOpacity={0.02} />
+                      <stop offset="5%" stopColor={chartColors.primary} stopOpacity={0.24} />
+                      <stop offset="95%" stopColor={chartColors.primary} stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid stroke="rgba(148, 163, 184, 0.12)" vertical={false} />
-                  <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fill: 'currentColor', fontSize: 11 }} />
-                  <YAxis tickLine={false} axisLine={false} tick={{ fill: 'currentColor', fontSize: 11 }} />
-                  <Tooltip formatter={(value) => [`${Number(value).toFixed(2)}%`, t(locale, 'marketPulse')]} />
-                  <Area type="monotone" dataKey="value" stroke="currentColor" strokeWidth={3} fill="url(#pulseGradient)" />
+                  <CartesianGrid stroke={chartColors.grid} vertical={false} />
+                  <XAxis dataKey="label" {...chartAxis} />
+                  <YAxis {...chartAxis} width={46} tickFormatter={(value) => `${value}%`} />
+                  <Tooltip contentStyle={chartTooltipStyle} formatter={(value) => [`${Number(value).toFixed(2)}%`, t(locale, 'marketPulse')]} />
+                  <Area type="monotone" dataKey="value" stroke={chartColors.primary} strokeWidth={2} fill="url(#pulseGradient)" isAnimationActive={false} />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
@@ -230,13 +231,13 @@ export function DashboardAnalytics({ locale, currency, globalData, coins, onSele
         icon={<BarChart3 size={20} />}
       >
         <div className="segment-chart">
-          <ResponsiveContainer width="100%" height={235}>
+          <ResponsiveContainer width="100%" height="100%" minHeight={235}>
             <BarChart data={segmentChartData}>
-              <CartesianGrid stroke="rgba(148, 163, 184, 0.12)" vertical={false} />
-              <XAxis dataKey="name" tickLine={false} axisLine={false} tick={{ fill: 'currentColor', fontSize: 11 }} />
-              <YAxis tickLine={false} axisLine={false} tick={{ fill: 'currentColor', fontSize: 11 }} tickFormatter={(value) => formatNumber(value)} />
-              <Tooltip formatter={(value) => [formatCurrency(value, currency, true), t(locale, 'marketCap')]} />
-              <Bar dataKey="marketCap" radius={[10, 10, 0, 0]} fill="currentColor" />
+              <CartesianGrid stroke={chartColors.grid} vertical={false} />
+              <XAxis dataKey="name" {...chartAxis} />
+              <YAxis {...chartAxis} width={55} tickFormatter={(value) => formatNumber(value)} />
+              <Tooltip contentStyle={chartTooltipStyle} formatter={(value) => [formatCurrency(value, currency, true), t(locale, 'marketCap')]} />
+              <Bar dataKey="marketCap" radius={[6, 6, 0, 0]} fill={chartColors.primary} isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
         </div>

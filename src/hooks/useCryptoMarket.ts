@@ -3,6 +3,24 @@ import { getGlobalData, getMarkets, getTrendingCoins } from '../api/coingecko';
 import type { CryptoMarket, SupportedCurrency, TrendingCoin } from '../types/crypto';
 
 type GlobalMarketData = Record<string, any> | null;
+const MARKET_CACHE_KEY = 'cryptopulse-market-cache-v1';
+
+type MarketCache = {
+  currency: string;
+  coins: CryptoMarket[];
+  globalData: GlobalMarketData;
+  trending: TrendingCoin[];
+  updatedAt: string;
+};
+
+function readMarketCache(currency: string): MarketCache | null {
+  try {
+    const cached = JSON.parse(localStorage.getItem(MARKET_CACHE_KEY) ?? 'null') as MarketCache | null;
+    return cached?.currency === currency && Array.isArray(cached.coins) ? cached : null;
+  } catch {
+    return null;
+  }
+}
 
 export function useCryptoMarket(currency: SupportedCurrency | string) {
   const [coins, setCoins] = useState<CryptoMarket[]>([]);
@@ -17,18 +35,40 @@ export function useCryptoMarket(currency: SupportedCurrency | string) {
     setError(null);
 
     try {
-      const [markets, globalResponse, trendingResponse] = await Promise.all([
+      const [marketsResult, globalResult, trendingResult] = await Promise.allSettled([
         getMarkets({ vsCurrency: currency, perPage: 100 }),
         getGlobalData(),
         getTrendingCoins(),
       ]);
 
-      setCoins(markets);
-      setGlobalData(globalResponse.data);
-      setTrending(trendingResponse.coins ?? []);
-      setLastUpdated(new Date());
+      if (marketsResult.status === 'rejected') throw marketsResult.reason;
+
+      const updatedAt = new Date();
+      const nextGlobalData = globalResult.status === 'fulfilled' ? globalResult.value.data : null;
+      const nextTrending = trendingResult.status === 'fulfilled' ? trendingResult.value.coins ?? [] : [];
+
+      setCoins(marketsResult.value);
+      setGlobalData(nextGlobalData);
+      setTrending(nextTrending);
+      setLastUpdated(updatedAt);
+      localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify({
+        currency,
+        coins: marketsResult.value,
+        globalData: nextGlobalData,
+        trending: nextTrending,
+        updatedAt: updatedAt.toISOString(),
+      } satisfies MarketCache));
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : 'Unexpected data loading error.');
+      const cached = readMarketCache(currency);
+      if (cached) {
+        setCoins(cached.coins);
+        setGlobalData(cached.globalData);
+        setTrending(cached.trending);
+        setLastUpdated(new Date(cached.updatedAt));
+        setError('Conexión temporalmente no disponible. Estás viendo los últimos datos guardados.');
+      } else {
+        setError(requestError instanceof Error ? requestError.message : 'No fue posible cargar los datos del mercado.');
+      }
     } finally {
       setLoading(false);
     }

@@ -98,7 +98,10 @@ function applySort(coins: CryptoMarket[], sortConfig: SortConfig, favorites: str
 
 export default function App() {
   const [locale, setLocale] = useLocalStorage('cryptopulse-locale', 'es');
-  const [theme, setTheme] = useLocalStorage('cryptopulse-theme', 'dark');
+  const [theme, setTheme] = useLocalStorage(
+    'cryptopulse-theme',
+    document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
+  );
   const [currency, setCurrency] = useLocalStorage('cryptopulse-currency', 'usd');
   const [favorites, setFavorites] = useLocalStorage<string[]>('cryptopulse-favorites', []);
   const [activeView, setActiveView] = useLocalStorage<AppView>('cryptopulse-v31-active-view', 'market');

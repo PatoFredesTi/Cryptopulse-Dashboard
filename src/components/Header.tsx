@@ -1,4 +1,4 @@
-import { BarChart3, BookOpenText, Github, LayoutDashboard, Moon, RefreshCw, Sun } from 'lucide-react';
+import { BarChart3, Github, Languages, LayoutDashboard, Moon, RefreshCw, Sun } from 'lucide-react';
 import { t } from '../utils/i18n';
 
 type HeaderProps = {
@@ -35,7 +35,7 @@ export function Header({
           <BarChart3 size={24} />
         </div>
         <div>
-          <h1>Market Intelligence</h1>
+          <h1>CryptoPulse</h1>
           <p className="brand-subtitle">{t(locale, 'appSubtitleV31')}</p>
         </div>
       </button>
@@ -56,18 +56,21 @@ export function Header({
           {t(locale, 'workspace')}
         </button>
 
-        <select value={currency} onChange={(event) => setCurrency(event.target.value)} aria-label="Currency selector">
+        <select value={currency} onChange={(event) => setCurrency(event.target.value)} aria-label={locale === 'es' ? 'Moneda' : 'Currency'}>
           <option value="usd">USD</option>
           <option value="eur">EUR</option>
           <option value="clp">CLP</option>
         </select>
 
-        <select value={locale} onChange={(event) => setLocale(event.target.value)} aria-label="Language selector">
-          <option value="es">ES</option>
-          <option value="en">EN</option>
-        </select>
+        <label className="select-control" title={locale === 'es' ? 'Idioma' : 'Language'}>
+          <Languages size={16} aria-hidden="true" />
+          <select value={locale} onChange={(event) => setLocale(event.target.value)} aria-label={locale === 'es' ? 'Idioma' : 'Language'}>
+            <option value="es">ES</option>
+            <option value="en">EN</option>
+          </select>
+        </label>
 
-        <button className="icon-button" type="button" onClick={() => setTheme(isDark ? 'light' : 'dark')} aria-label="Toggle theme">
+        <button className="icon-button" type="button" onClick={() => setTheme(isDark ? 'light' : 'dark')} aria-label={isDark ? (locale === 'es' ? 'Activar tema claro' : 'Use light theme') : (locale === 'es' ? 'Activar tema oscuro' : 'Use dark theme')}>
           {isDark ? <Sun size={18} /> : <Moon size={18} />}
         </button>
 

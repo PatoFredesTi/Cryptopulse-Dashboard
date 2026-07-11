@@ -42,6 +42,7 @@ import {
   stripHtml,
 } from '../utils/formatters';
 import { t } from '../utils/i18n';
+import { chartAxis, chartColors, chartTooltipStyle } from '../utils/chartTheme';
 
 const dayRanges = [
   { label: '24h', value: 1 },
@@ -289,28 +290,27 @@ export function CoinDetailDrawer({
 
                   <div className="chart-card">
                     {chartData.length ? (
-                      <ResponsiveContainer width="100%" height={280}>
+                      <ResponsiveContainer width="100%" height="100%" minHeight={280}>
                         <AreaChart data={chartData} margin={{ top: 12, right: 18, left: 4, bottom: 6 }}>
                           <defs>
                             <linearGradient id="priceGradient" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="currentColor" stopOpacity={0.28} />
-                              <stop offset="95%" stopColor="currentColor" stopOpacity={0.02} />
+                              <stop offset="5%" stopColor={chartColors.primary} stopOpacity={0.24} />
+                              <stop offset="95%" stopColor={chartColors.primary} stopOpacity={0} />
                             </linearGradient>
                           </defs>
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                          <XAxis dataKey="date" tickLine={false} axisLine={false} minTickGap={26} />
+                          <CartesianGrid stroke={chartColors.grid} vertical={false} />
+                          <XAxis dataKey="date" {...chartAxis} minTickGap={26} />
                           <YAxis
-                            tickLine={false}
-                            axisLine={false}
+                            {...chartAxis}
                             width={88}
                             tickFormatter={(value) => formatCurrency(value, currency, true)}
                           />
                           <Tooltip
                             formatter={(value) => [formatCurrency(value, currency), t(locale, 'price')]}
                             labelFormatter={(label) => `${t(locale, 'date')}: ${label}`}
-                            contentStyle={{ borderRadius: '16px' }}
+                            contentStyle={chartTooltipStyle}
                           />
-                          <Area type="monotone" dataKey="value" stroke="currentColor" strokeWidth={3} fill="url(#priceGradient)" />
+                          <Area type="monotone" dataKey="value" stroke={chartColors.primary} strokeWidth={2} fill="url(#priceGradient)" isAnimationActive={false} />
                         </AreaChart>
                       </ResponsiveContainer>
                     ) : (
@@ -355,22 +355,21 @@ export function CoinDetailDrawer({
 
                   <div className="chart-card volume-chart-card">
                     {volumeData.length ? (
-                      <ResponsiveContainer width="100%" height={260}>
+                      <ResponsiveContainer width="100%" height="100%" minHeight={260}>
                         <BarChart data={volumeData} margin={{ top: 12, right: 18, left: 4, bottom: 6 }}>
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                          <XAxis dataKey="date" tickLine={false} axisLine={false} minTickGap={26} />
+                          <CartesianGrid stroke={chartColors.grid} vertical={false} />
+                          <XAxis dataKey="date" {...chartAxis} minTickGap={26} />
                           <YAxis
-                            tickLine={false}
-                            axisLine={false}
+                            {...chartAxis}
                             width={88}
                             tickFormatter={(value) => formatCurrency(value, currency, true)}
                           />
                           <Tooltip
                             formatter={(value) => [formatCurrency(value, currency, true), t(locale, 'volume')]}
                             labelFormatter={(label) => `${t(locale, 'date')}: ${label}`}
-                            contentStyle={{ borderRadius: '16px' }}
+                            contentStyle={chartTooltipStyle}
                           />
-                          <Bar dataKey="value" radius={[10, 10, 0, 0]} fill="currentColor" />
+                          <Bar dataKey="value" radius={[5, 5, 0, 0]} fill={chartColors.secondary} isAnimationActive={false} />
                         </BarChart>
                       </ResponsiveContainer>
                     ) : (
@@ -397,18 +396,18 @@ export function CoinDetailDrawer({
 
                   <div className="chart-card comparison-chart-card">
                     {comparisonData.length ? (
-                      <ResponsiveContainer width="100%" height={280}>
+                      <ResponsiveContainer width="100%" height="100%" minHeight={280}>
                         <LineChart data={comparisonData} margin={{ top: 12, right: 18, left: 4, bottom: 6 }}>
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                          <XAxis dataKey="date" tickLine={false} axisLine={false} minTickGap={26} />
-                          <YAxis tickLine={false} axisLine={false} width={70} tickFormatter={(value) => `${value.toFixed(0)}%`} />
+                          <CartesianGrid stroke={chartColors.grid} vertical={false} />
+                          <XAxis dataKey="date" {...chartAxis} minTickGap={26} />
+                          <YAxis {...chartAxis} width={70} tickFormatter={(value) => `${value.toFixed(0)}%`} />
                           <Tooltip
                             formatter={(value, name) => [formatPercent(value), name === 'primary' ? coin.name : comparisonCoin?.name ?? t(locale, 'comparison')]}
                             labelFormatter={(label) => `${t(locale, 'date')}: ${label}`}
-                            contentStyle={{ borderRadius: '16px' }}
+                            contentStyle={chartTooltipStyle}
                           />
-                          <Line type="monotone" dataKey="primary" strokeWidth={3} dot={false} />
-                          <Line type="monotone" dataKey="comparison" strokeWidth={3} dot={false} />
+                          <Line type="monotone" dataKey="primary" stroke={chartColors.primary} strokeWidth={2} dot={false} isAnimationActive={false} />
+                          <Line type="monotone" dataKey="comparison" stroke={chartColors.secondary} strokeWidth={2} dot={false} isAnimationActive={false} />
                         </LineChart>
                       </ResponsiveContainer>
                     ) : (

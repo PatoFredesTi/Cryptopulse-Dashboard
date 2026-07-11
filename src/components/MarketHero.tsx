@@ -3,6 +3,7 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip } from 'recharts';
 import type { CryptoMarket } from '../types/crypto';
 import { buildMarketPulseData, getMarketSentiment, getTopMovers } from '../utils/analytics';
 import { formatCurrency, formatPercent, getChangeTone } from '../utils/formatters';
+import { chartColors, chartTooltipStyle } from '../utils/chartTheme';
 
 type MarketHeroProps = {
   locale: string;
@@ -17,10 +18,10 @@ function getCopy(locale: string) {
 
   return {
     eyebrow: isEs ? '' : '',
-    title: isEs ? 'Dashboard cripto con experiencia de producto.' : 'Crypto dashboard with a product-grade experience.',
+    title: isEs ? 'El mercado, sin ruido.' : 'The market, without the noise.',
     description: isEs
-      ? 'Analiza el mercado, revisa activos, organiza watchlists, simula portafolios y monitorea alertas desde una interfaz más limpia, profesional y enfocada en decisiones.'
-      : 'Analyze the market, inspect assets, organize watchlists, simulate portfolios and monitor alerts from a cleaner, more professional decision-focused interface.',
+      ? 'Precios, tendencias y señales esenciales para entender el mercado cripto y tomar decisiones con más contexto.'
+      : 'Essential prices, trends and signals to understand the crypto market and make better-informed decisions.',
     liveData: isEs ? 'Datos en vivo' : 'Live data',
     analytics: isEs ? 'Analytics' : 'Analytics',
     localWorkspace: isEs ? 'Workspace local' : 'Local workspace',
@@ -42,7 +43,7 @@ function MiniAssetCard({ label, coin, currency, onSelectCoin, variant }: { label
       <div className="hero-asset-card muted-card">
         <span>{label}</span>
         <strong>—</strong>
-        <small>Loading market data</small>
+        <small>{label}</small>
       </div>
     );
   }
@@ -99,16 +100,16 @@ export function MarketHero({ locale, currency, coins, globalData, onSelectCoin }
         </div>
 
         <div className="hero-chart-shell">
-          <ResponsiveContainer width="100%" height={150}>
+          <ResponsiveContainer width="100%" height="100%" minHeight={150}>
             <AreaChart data={pulseData}>
               <defs>
                 <linearGradient id="heroPulseGradient" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0%" stopColor="currentColor" stopOpacity={0.32} />
-                  <stop offset="100%" stopColor="currentColor" stopOpacity={0.02} />
+                  <stop offset="0%" stopColor={chartColors.primary} stopOpacity={0.26} />
+                  <stop offset="100%" stopColor={chartColors.primary} stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <Tooltip formatter={(value) => [`${Number(value).toFixed(2)}%`, copy.marketSignal]} />
-              <Area type="monotone" dataKey="value" stroke="currentColor" strokeWidth={3} fill="url(#heroPulseGradient)" />
+              <Tooltip contentStyle={chartTooltipStyle} formatter={(value) => [`${Number(value).toFixed(2)}%`, copy.marketSignal]} />
+              <Area type="monotone" dataKey="value" stroke={chartColors.primary} strokeWidth={2} fill="url(#heroPulseGradient)" isAnimationActive={false} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
